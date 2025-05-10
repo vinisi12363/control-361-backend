@@ -3,7 +3,6 @@ import { CacheModule } from '@nestjs/cache-manager';
 import { createKeyv } from '@keyv/redis';
 import { Keyv } from 'keyv';
 import { CacheableMemory } from 'cacheable';
-import { VehiclesController } from 'src/modules/vehicles/controllers/vehicles.controller';
 
 @Module({
   imports: [
@@ -18,8 +17,9 @@ import { VehiclesController } from 'src/modules/vehicles/controllers/vehicles.co
           ],
         };
       },
+      isGlobal: true,
     }),
   ],
-  controllers: [VehiclesController],
+  exports: [CacheModule],
 })
-export class AppModule {}
+export class CommonCacheModule {}
