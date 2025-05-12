@@ -9,7 +9,7 @@ async function bootstrap() {
     origin: (origin, callback) => {
       const allowedOrigins = [
         'https://control-361-frontend.vercel.app',
-        'http://localhost:3000',
+        'http://localhost:5173',
       ];
       if (!origin || allowedOrigins.includes(origin)) {
         callback(null, true);
@@ -31,9 +31,10 @@ async function bootstrap() {
   SwaggerModule.setup('api', app, document);
   app.useGlobalPipes(new ValidationPipe({ transform: true }));
   await app.listen(process.env.PORT ?? 3000);
-  const SELF_URL: string = process.env.API_URL ?? 'http://localhost:3000';
+  const URL = `${process.env.API_URL}/vehicles`;
+  const SELF_REQUEST_URL: string = URL ?? 'http://localhost:3000/vehicles';
   setInterval(() => {
-    fetch(SELF_URL)
+    fetch(SELF_REQUEST_URL)
       .then((res) => console.log(`[AutoPing] Status: ${res.status}`))
       .catch((err) => console.error('[AutoPing] Erro:', err));
   }, 40000);
