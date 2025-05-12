@@ -5,6 +5,10 @@ import { ValidationPipe } from '@nestjs/common';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
+  app.enableCors({
+    origin: 'https://control-361-frontend.vercel.app/', 
+    credentials: true, 
+  });
   const config = new DocumentBuilder()
     .setTitle('API de Locação de Veículos')
     .setDescription(
