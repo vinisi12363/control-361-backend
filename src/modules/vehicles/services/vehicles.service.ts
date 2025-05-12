@@ -34,8 +34,7 @@ export class VehiclesService {
           },
         }),
       );
-      const formatedResponse = new VehiclesFormatterDto(response.data);
-      return formatedResponse;
+      return new VehiclesFormatterDto(response.data);
     } catch (error) {
       HttpRequestHandler.handle(error);
     }

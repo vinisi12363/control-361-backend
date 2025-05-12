@@ -3,19 +3,23 @@ import { LocationVehicles, VehiclesResponse } from 'src/types/vehicles.type';
 import { VehiclesResponseDto } from './response-vehicles.dto';
 
 export class VehiclesFormatterDto {
-  vehicles: VehiclesResponseDto[];
-  locationVehicles: LocationVehicles[];
-  totalPage: number;
-  page: number;
-  perPage: number;
+  content: {
+    vehicles: VehiclesResponseDto[];
+    locationVehicles: LocationVehicles[];
+    totalPages: number;
+    page: number;
+    perPage: number;
+  };
 
   constructor(data: VehiclesResponse) {
-    this.vehicles = (data.content.vehicles || []).map(
-      (vehicle) => new VehiclesResponseDto(vehicle),
-    );
-    this.locationVehicles = data.content.locationVehicles || [];
-    this.totalPage = data.totalPage;
-    this.page = data.page;
-    this.perPage = data.perPage;
+    this.content = {
+      vehicles: (data.content.vehicles || []).map(
+        (vehicle) => new VehiclesResponseDto(vehicle),
+      ),
+      locationVehicles: data.content.locationVehicles || [],
+      totalPages: data.content.totalPages,
+      page: data.content.page,
+      perPage: Number(data.content.perPage),
+    };
   }
 }

@@ -27,8 +27,8 @@ export type VehiclesResponse = {
   content: {
     vehicles: Vehicle[];
     locationVehicles: LocationVehicles[];
+    totalPages: number;
+    page: number;
+    perPage: number;
   };
-  totalPage: number;
-  page: number;
-  perPage: number;
 };
