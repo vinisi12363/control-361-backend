@@ -7,7 +7,14 @@ import {
 } from '@nestjs/common';
 import { VehiclesService } from '../services/vehicles.service';
 import { GetVehiclesDto } from '../dtos/get-vehicles.dto';
-import { ApiOperation, ApiQuery, ApiResponse, ApiTags } from '@nestjs/swagger';
+import {
+  ApiHeader,
+  ApiOperation,
+  ApiQuery,
+  ApiResponse,
+  ApiTags,
+} from '@nestjs/swagger';
+import { Headers } from '@nestjs/common';
 
 @ApiTags('vehicles')
 @Controller('vehicles')
@@ -15,7 +22,12 @@ export class VehiclesController {
   constructor(private readonly vehiclesService: VehiclesService) {}
 
   @Get()
-  @ApiOperation({ summary: 'Recupera a lista de veículos em cache na api' })
+  @ApiOperation({ summary: 'Recupera a lista de veículos atualizada.' })
+  @ApiHeader({
+    name: 'x-api-key',
+    description: 'Chave de API para autenticação',
+    required: true,
+  })
   @ApiQuery({
     name: 'type',
     required: false,
@@ -73,6 +85,17 @@ export class VehiclesController {
       },
     },
   })
+  @ApiResponse({
+    status: 401,
+    description: 'Unauthorized',
+    schema: {
+      example: {
+        statusCode: 401,
+        error: 'Unauthorized',
+        message: 'API Key inválida ou ausente',
+      },
+    },
+  })
   @ApiResponse({ status: 400, description: 'bad Request' })
   async getVehicles(@Query() query: GetVehiclesDto) {
     try {
@@ -89,7 +112,7 @@ export class VehiclesController {
       };
     } catch (error) {
       console.error('Erro ao obter veículos:', error);
-      throw new InternalServerErrorException('Erro interno ao obter veículos');
+      throw new InternalServerErrorException(error.message);
     }
   }
 }
