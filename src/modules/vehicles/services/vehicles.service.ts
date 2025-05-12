@@ -2,8 +2,9 @@ import { firstValueFrom } from 'rxjs';
 import { Injectable } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { HttpService } from '@nestjs/axios';
-import { VehiclesResponse } from 'src/types/vehicles.type';
-import { HttpRequestHandler } from 'src/common/handlers/exception.handler';
+import { VehiclesResponse } from '../../../types/vehicles.type';
+import { HttpRequestHandler } from '../../../common/handlers/exception.handler';
+import { VehiclesFormatterDto } from '../dtos/allVehicles.dto';
 
 @Injectable()
 export class VehiclesService {
@@ -16,7 +17,7 @@ export class VehiclesService {
     type?: 'others' | 'tracked',
     page?: number,
     perPage?: number,
-  ): Promise<VehiclesResponse | null> {
+  ): Promise<VehiclesFormatterDto | null> {
     const urlWithoutParams =
       this.configService.get<string>('VEHICLE_API_URL') || '';
     const urlDefaultParams =
@@ -33,7 +34,8 @@ export class VehiclesService {
           },
         }),
       );
-      return response.data;
+      const formatedResponse = new VehiclesFormatterDto(response.data);
+      return formatedResponse;
     } catch (error) {
       HttpRequestHandler.handle(error);
     }
